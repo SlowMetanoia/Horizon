@@ -1,0 +1,5 @@
+package akaa
+
+class Main {
+
+}
