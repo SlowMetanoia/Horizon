@@ -1,6 +1,5 @@
 import Shorts.Sugar.demo
 
-import java.time.MonthDay
 
 //классический if
 def IF(condition: =>Boolean)(code: =>Unit): Unit ={
@@ -21,5 +20,27 @@ WHILE(i>0){
 }
 
 demo.main(Array())
+
+
+
+
+
+
+val c = 1 + 2
+
+
+
+
+val c = (1 to 10) map { i => i * i }
+
+
+
+
+
+
+
+
+
+
 
 

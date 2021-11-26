@@ -7,7 +7,7 @@ class FunctionCompositions[A,B] private(val f:A=>B)extends AnyVal{
   private[this] def forkThread[D,E,F](f1:D=>E)(f2:E=>F):D=>E = composition(f1)((a:E)=> {
     new Thread(() => {
       f2(a)
-    }).start();
+    }).start()
     a
   })
   def >>=[C](f1:B=>C):A=>C = composition(f)(f1)
