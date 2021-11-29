@@ -1,7 +1,9 @@
-package Shorts.Sugar
+package Educational.Sugar
 
 import Shorts.FunctionalCalculationsDSL.FunctionCompositions._
+
 import java.lang.Thread.sleep
+import scala.language.implicitConversions
 
 object demo extends App {
   val f1 = (a: Int) => a + 10

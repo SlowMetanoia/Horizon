@@ -1,4 +1,4 @@
-import Shorts.Sugar.demo
+import Educational.Sugar.demo
 
 
 //классический if
