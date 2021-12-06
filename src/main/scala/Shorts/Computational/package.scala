@@ -38,5 +38,13 @@ package object Computational {
     coefficients.indices.map{
       i=>coefficients(i)*i*pow(x,i-1)
     }.tail.sum
-    
+  //(x-x1)(x-x2)(x-x3)...() = x^n - sum(xi)*x^(n-1) + () -
+  def makePolynomial(roots: IndexedSeq[Double]):IndexedSeq[Double] =
+    roots.indices.appended(roots.length)
+      .map{
+      i=>
+        math.pow(-1,i)*
+          roots.combinations(i)
+            .map(_.product).sum
+    }
 }

@@ -1,7 +1,8 @@
-package Shorts
+package SADMOR
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+
 package object KomiVoyager{
   def Voyage(weights: Array[Array[Int]],start:Int) = {
     case class Voyager(path:List[Int],price:Int) {

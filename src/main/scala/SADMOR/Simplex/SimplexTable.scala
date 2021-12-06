@@ -1,4 +1,4 @@
-package Shorts.Simplex
+package SADMOR.Simplex
 
 import scala.language.implicitConversions
 

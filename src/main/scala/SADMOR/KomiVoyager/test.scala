@@ -1,6 +1,7 @@
-package Shorts.KomiVoyager
+package SADMOR.KomiVoyager
 
-import Shorts.KomiVoyager
+import SADMOR.KomiVoyager
+import SADMOR.KomiVoyager._
 
 object test extends App {
   val arr = Array(
@@ -11,6 +12,10 @@ object test extends App {
     Array(15, 25, 20, 14, 9000, 10),
     Array(10, 5, 20, 10, 8, 9000)
   )
+  /*def Transpose(array: Array[Array[Int]]):Array[Array[Int]] = {
+    for(i<-array.indices) yield
+      for
+  }*/
   val voyages = (for(i<- 0 to 5) yield KomiVoyager.Voyage(arr,i)).toMap
   val min = voyages.keySet.min
   println(s"minimum price is $min done by way ${voyages(min).reverse.mkString("->")}")

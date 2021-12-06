@@ -1,3 +1,5 @@
+import scala.collection.mutable
+
 /**
  * Классовый сахар и pattern matching
  */
@@ -7,7 +9,6 @@
  */
   //Хоба, кортежи.
 val tuple0 = ("b",2)//всё, кортеж готов.
-
 
 val (p1,p2) = tuple0
 p1
@@ -89,6 +90,8 @@ val arr = new Array[String](3)
 arr(0) = "zero"
 //arr.apply(0)
 arr(0)
+val arr1 = Array(3)
+
 
 /**
  * Одноимённый с классом объект называется объект-компаньон. Отличие от обычного singleton только
@@ -99,7 +102,7 @@ object Person{
   /**
    * Сахар №3 - фабричный метод из компаньона!
    */
-  def apply(name:String,  age:Int, sex:Boolean) = new Person(name,age,sex)
+  def apply(name:String, age:Int, sex:Boolean) = new Person(name,age,sex)
   /**
    * пока неясный Сахар №4 - unapply
    * Вообще у такого рода методов есть своё название - экстракторы
@@ -113,9 +116,10 @@ object Person{
  * 2. match умеет использовать экстракторы и неявное присваивание для кортежей.
  */
 (1,"str") match {
-  case (a:Int,b:String) => b + " "+ a //Если входящее значение - tuple2[Int,String], то Int упадёт в a,String - в b
+  case (a,b) => b + " "+ a //Если входящее значение - tuple2[Int,String], то Int упадёт в a,String - в b
   case _ => throw new MatchError("HOW???")
 }
+
 person1 match {
   //а вот это - использование экстрактора.
   case Person(a,b,c) => a+" "+b+" "+c
@@ -136,7 +140,38 @@ person1 match {
 case class Inhuman(name:String,age:Int,sex:Boolean){
   println(this)
 }
-val v3 = Inhuman("Seth",4000,true)
+val v3:Any = Inhuman("Seth",4000,true)
+v3 match {
+  case inhuman: Inhuman => println(inhuman)
+  case _ =>
+}
+
+v3 match {
+  case Inhuman(name,age,sex) => println(s"My name is $name, I am ${if(sex)"male" else "female"} and $age y.o.")
+}
+
+val map0 = mutable.HashMap(1->"a",2->"b",3->"c")
+val map1 = new mutable.HashMap[String,Int]
+  for(el<-map0.keySet)  map1(map0(el)) = el
+map0
+map1
+
+val map2 = for((k,v)<-map0) yield (v,k)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * доп.Сахар №1: Инфексная запись
  * Если case-class имеет 2 поля, то его экстрактор можно писать в инфексной форме:

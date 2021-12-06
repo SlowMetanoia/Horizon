@@ -30,6 +30,4 @@ object demo extends App {
   implicit def Int2MyInt(x:Int):MyInt = MyInt(x)
   val v2 = MyInt(1) ~~~~~ 1
   val v3 = 1 ~~~~~ 1
-
-
 }
