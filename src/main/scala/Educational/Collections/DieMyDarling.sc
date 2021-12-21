@@ -19,6 +19,7 @@ import scala.reflect.ClassTag
 //PlaceHolder
 def func0:Int=>String = _.toString//переданный инт подставится вместо _
 func0(3456)
+
 //Это не кортеж и не карринг, это просто 2 значения, то есть просто двуместная функция
 def func1:(Int,String)=>Boolean = _.toString == _
 func1(10,"10")
@@ -31,14 +32,14 @@ def func3:Int=>Int = {
   case 3 => 6
 }
 //дальше
-def func3AndAHalf:PartialFunction[Int,Int]= {
+def func3AndAHalf:PartialFunction[Int,Int] = {
   case 1 => 1
   case 2 => 2
   case 3 => 6
 }
 func3(1)
 func3(3)
-//func3(10) - MatchError
+//func3(10) //- MatchError
 
 //При передаче нескольких параметров в ЧОФ, формируется кортеж, при этом сами параметры передаются как обычно.
 def func4:(Int,Int)=>Int = {
@@ -46,6 +47,8 @@ def func4:(Int,Int)=>Int = {
 }
 func4(1,2)
 //func4(5,3) - MatchError
+
+//---------------------------------------------collections--------------------------------------------------------------
 
 val coll0 = IndexedSeq(1,2,3,4,5)
 //map
@@ -88,7 +91,7 @@ collection1.foreach(println)
 /**
  * Свои коллекции:
  */
-case class MyArray[A:ClassTag](array: Array[A])extends Iterable[A]{
+case class MyArray[A](array: Array[A])extends Iterable[A]{
   override def iterator:Iterator[A] = new Iterator[A]{
     var index = 0
     override def hasNext: Boolean = index<array.length
@@ -212,3 +215,11 @@ seq1.exists(x=>x*2==2)
 //  и т.д.
 //  https://habr.com/ru/post/333362/
 
+
+//---------------------------------------------------reduce-------------------------------------------------------------
+
+
+val seq2 = 1 to 5
+seq2
+seq2.reduce(_ + _)
+seq2.reduce(_ * _)

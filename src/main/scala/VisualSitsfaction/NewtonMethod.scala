@@ -1,0 +1,5 @@
+package VisualSitsfaction
+
+object NewtonMethod {
+
+}
