@@ -4,7 +4,7 @@ import scala.annotation.tailrec
 import scala.collection.mutable
 
 package object KomiVoyager{
-  def Voyage(weights: Array[Array[Int]],start:Int) = {
+  def Voyage(weights: Array[Array[Int]]): (Int, List[Int]) = {
     case class Voyager(path:List[Int],price:Int) {
       def go(way: Int): Voyager = Voyager(way :: path, price + weights(path.head)(way))
       override def toString: String = s"path = $path\n" +
@@ -26,7 +26,10 @@ package object KomiVoyager{
       else
         findTheBestWay(voyagers ++ newVoyagers)
     }
-    val v = findTheBestWay(mutable.PriorityQueue(Voyager(List(start),0)))
+    val v = findTheBestWay(mutable.PriorityQueue().addAll{
+      weights.indices.map(i=>Voyager(List(i),0))
+    }
+    )
     v.price->v.path
   }
 }
