@@ -1,5 +1,4 @@
 import scala.collection.mutable.ArrayBuffer
-import scala.reflect.ClassTag
 
 /**
  * Блеск монадичности и сложность кода.
@@ -219,7 +218,7 @@ seq1.exists(x=>x*2==2)
 //---------------------------------------------------reduce-------------------------------------------------------------
 
 
-val seq2 = 1 to 5
-seq2
-seq2.reduce(_ + _)
-seq2.reduce(_ * _)
+val seq4 = 1 to 5
+seq4
+seq4.reduce(_ + _)
+seq4.reduce(_ * _)

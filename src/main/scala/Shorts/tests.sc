@@ -15,3 +15,4 @@ val rand = Random
 var a=Seq(0)
 for (i<-a if i<10) a = a.appended(i+1)
 a
+for (a<-a) yield ()

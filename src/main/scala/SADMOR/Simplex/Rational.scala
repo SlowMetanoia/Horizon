@@ -4,17 +4,21 @@ import scala.language.implicitConversions
 
 case class Rational(a: Int, b: Int) extends Ordering[Rational]{
   def NOD: Int => Int => Int = a => b => {
-    (a>0,b>0) match {
-      case (false,false) => NOD(-a)(-b)
-      case (true,false) => NOD(a)(-b)
-      case (false,true) => NOD(-a)(b)
-      case (true,true) =>
-        val x = a max b
-        val y = a min b
-        x % y match {
-          case 0 => y
-          case _ => NOD(x % y)(y)
-        }
+    if (a == 0 || b == 0)
+      a max b
+    else {
+      (a >= 0, b >= 0) match {
+        case (false, false) => NOD(-a)(-b)
+        case (true, false) => NOD(a)(-b)
+        case (false, true) => NOD(-a)(b)
+        case (true, true) =>
+          val x = a max b
+          val y = a min b
+          x % y match {
+            case 0 => y
+            case _ => NOD(x % y)(y)
+          }
+      }
     }
   }
 

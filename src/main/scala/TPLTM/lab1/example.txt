@@ -1,0 +1,6 @@
+a = "sdfsdf"
+b = "sdfkljsdf"
+c = "sdfsdf"
+f = b
+c = "sdfsdf
+"

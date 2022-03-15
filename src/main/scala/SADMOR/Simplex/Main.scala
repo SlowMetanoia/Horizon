@@ -4,15 +4,17 @@ import scala.language.implicitConversions
 
 object Main extends App {
   val basis = Array("x1", "x2", "x3")
-  val free = Array("y1", "y2", "y3")
+  val free = Array("y1", "y2", "0")
 
+  def step( table: SimplexTable )(x:Int,y:Int) = {
+    println(table.simplexTransformation(x,y))
+    println()
+    table.simplexTransformation(x,y)
+  }
 
-  val b = Array(Array(2, 3), Array(4, 5), Array(8, 7))
+  val b = Array(Array(3,0,4, 36), Array(3,0,2,24), Array(1,1,0,6), Array(-7,-1,-3,0))
   val c = b.map(_.map(Rational(_, 1)))
-  var smpx2 = SimplexMethodCalculations(matrix = c,bCol = Array(Rational(7,1),Rational(8,1),Rational(9,1)),zRow = Array(Rational(1,1),Rational(2,1)))
-  println(smpx2)
-  smpx2 = smpx2
-  println(smpx2)
-  smpx2 = smpx2
-  println(smpx2)
+  var table = SimplexTable(c, free, basis)
+  table = step(table)(3,1)
+  table = step(table)(2,3)
 }
