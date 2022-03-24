@@ -44,11 +44,6 @@ object eq extends Sign{
 class expr(code:String)
 
 case class StringConst(string: String) extends expr(string) with Lexeme
-case class Identifier(identifier: String) extends expr(identifier) with Lexeme
-case class Condition(left:expr,right:expr,sign:Sign) extends expr(left + " " + sign + " " + right) with Lexeme
-case class Assignment(identifier:expr, value:expr) extends expr(identifier + "=" + value) with Lexeme
-case class whileBlock(body:expr, cond: Condition) extends expr(s"do\n$body\nwhile($cond)") with Lexeme
-
 object StringConst{
   def apply(string: String):StringConst = {
     if(stringConstPattern.findFirstIn(string).isDefined)
@@ -57,15 +52,23 @@ object StringConst{
       throw new LexicalError("wrong string const input")
   }
 }
+case class Identifier(identifier: String) extends expr(identifier) with Lexeme
+case class Condition(left:expr,right:expr,sign:Sign) extends expr(left + " " + sign + " " + right) with Lexeme
+case class Assignment(identifier:expr, value:expr) extends expr(identifier + "=" + value) with Lexeme
+case class whileBlock(body:expr, cond: Condition) extends expr(s"do\n$body\nwhile($cond)") with Lexeme
+
+
 
 object Identifier{
   def apply(string: String):Identifier = {
-    if(identifierPattern.findFirstIn(string).isDefined)
-
+    if(identifierPattern.findFirstIn(string).isDefined) ??? else ???
   }
 }
 
 stringConstPattern.findAllIn(testTextInString).toArray.mkString("\n")
 
 
+val regex = """\(.*\)""".r
+
+val value = "asdasd(fg;hjfgh)dgffgd".split(regex.toString())
 

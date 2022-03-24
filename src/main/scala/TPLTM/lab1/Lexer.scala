@@ -16,6 +16,7 @@ import scala.util.matching.Regex
  * строковые константы (последовательность символов в двойных кавычках), знак
  * присваивания «=».
  */
+class Lexer
 object Lexer {
   val whileBlockPattern: Regex = """do.*while\(.*\)""".r
   val conditionPattern: Regex = """\(.*(=|=>|=<).*\)""".r
