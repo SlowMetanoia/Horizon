@@ -16,35 +16,6 @@ import scala.io.Source
  */
 val source = Source.fromFile("C:\\WorkData\\Scala_Projects\\Pet\\Horizon\\src\\main\\scala\\TPLTM\\lab1\\example.txt")
 source.getLines()
-
-object Lexer {
-  def analyse( strings: Iterator[ String ] ): Iterator[ LexemeType ] =
-    strings.flatMap(str=> str.split(";")).flatMap(analyseString)
-  
-  
-  def analyseString( string: String ): Seq[ LexemeType ] = ???
-  
-  def findCond( string: String ): Seq[innerString] = {
-    val regex = """\(.*\)""".r
-    regex.findAllIn(string).toSeq.map(Condition).appended(pureStr(""))
-                    .zip(
-                      string.split(regex.toString()).map(pureStr)
-                      )
-                    .flatMap(pair=>Seq(pair._1,pair._2))
-  }
-}
-
-sealed trait LexemeType
-
-case class keyWord( value: String ) extends LexemeType
-case class identifier( value: String ) extends LexemeType
-case class operator( value: String ) extends LexemeType
-case class value( value: String ) extends LexemeType
-
-//object smthg extends LexemeType
-
-sealed trait innerString
-
-case class pureStr( value: String) extends AnyVal with innerString
-case class Condition( value: String ) extends AnyVal with innerString
-
+val string = """dflgikjslkfg dfgkdjfgl //dfd//dfgdfg dfg// gfh fgh """
+val noComm = """"""
+val comment = noComm.split("//").tail.flatMap("//"+_.mkString).mkString
