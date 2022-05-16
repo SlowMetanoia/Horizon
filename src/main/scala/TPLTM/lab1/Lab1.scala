@@ -60,7 +60,9 @@ object Analyser{
     val analyser = Analyser()
     (source.getLines().flatMap(string=> lexaaa.tokens(string))
            .flatMap(string=>
-                      analyser.parseAll(analyser.lexemes,string).get).toList
+                      analyser.parseAll(analyser.lexemes,string)
+                              .get)
+           .toList
       ,analyser.idTable - "$def")
   }
 }
@@ -88,3 +90,4 @@ object Lab1 extends App {
  * табличка id
  *
  */
+
