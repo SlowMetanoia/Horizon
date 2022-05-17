@@ -6,7 +6,12 @@
   case _:Int => None
 }
 
-
+val strUpOn: String => String = {str =>
+  val str1 = str.drop(str.indexOf("(")+1)
+  str1.take(str1.lastIndexOf(")"))
+}
+val str = "(dfjvkbgdkbn)"
+strUpOn(str)
 
 
 
