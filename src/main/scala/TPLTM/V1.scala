@@ -14,9 +14,14 @@ object V1 extends App{
     strings.flatMap(_.split(""";|\s""")
       .collect { case str: String if str != "" => str })
 
-  val whilePattern = """do[\s\n.]*while[\s\n]*([\s.]*)""".r
-
-  case class WHILE(condition:String,body:List[String])
+  val whilePattern = """do[\s\n](\n|.)*while\s*\(.*\)""".r
+  
+  
+  case class line( str:String)
+  sealed trait LN
+  case class WHILE(condition:String,body:List[String]) extends LN
+  case class CodeLines(strs:List[String]) extends LN
+  
   //выпиливание мусора из do while
   object WhileParser extends RegexParsers{
     def doo:Parser[Unit] ="""\s*do\s*""".r^^{ _ => () }
@@ -33,11 +38,19 @@ object V1 extends App{
   val conditionTest = "(ksjdhfskjdfh)"
   val doTest = "    do     "
   val whileTest = "while"
-  val weeweeTest = "do       \n" +
+  val weeweeTest = "do\n" +
+    "do       \n" +
     "jorgksjgh" +
-    "   while       (skjdghxkjf)"
+    "   while       ( s   k   j   dghxkjf)" +
+    "while(dfghlkdjfgh)"
 
   val Result = WhileParser.parseAll(WhileParser.weeweewhile,weeweeTest).get
   println(Result)
-  println(whilePattern.findAllIn(weeweeTest).toList)
+  val res = whilePattern.findAllIn(weeweeTest).toList
+  println(res.map(line))
+  def whileDivide:String => List[LN] = {code =>
+    ???
+  }
+  val res1 = WhileParser.parseAll(WhileParser.weeweewhile,res.head)
+  println(res1)
 }
