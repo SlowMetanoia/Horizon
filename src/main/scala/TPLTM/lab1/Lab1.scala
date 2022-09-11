@@ -4,20 +4,7 @@ import scala.io.Source
 import scala.util.matching.Regex
 import scala.util.parsing.combinator.RegexParsers
 
-/**
- * Первая лаба по методам трансляции
- * Задание
- * Реализовать программу, выполняющая лексический анализ входного языка и создание
- * таблицы лексем с указанием их типов.
- * Программа должна выдавать сообщения о наличии во входном тексте ошибок, которые могут
- * быть обнаружены на этапе лексического анализа
- *
- * Вариант 17:
- * Входной язык содержит операторы цикла «do ... while (...)», разделённые символом
- * «;». Операторы условия содержат идентификаторы, знаки сравнения «<=», «=>», «=»,
- * строковые константы (последовательность символов в двойных кавычках), знак
- * присваивания «=».
- */
+
 sealed trait Lexeme
 case class ConstStr(value:String) extends Lexeme
 case class Identifier(value:String,id:Int) extends Lexeme
@@ -25,7 +12,7 @@ case class Operator(op:String) extends Lexeme
 case class KeyWord(kw:String) extends Lexeme
 case class Comment(comm:String) extends Lexeme
 
-class lexaaa
+
 object lexaaa {
   def tokens(string: String): Seq[String] = {
     val comment = string.split("//").tail.flatMap("//"+_.mkString).mkString
@@ -60,9 +47,7 @@ object Analyser{
     val analyser = Analyser()
     (source.getLines().flatMap(string=> lexaaa.tokens(string))
            .flatMap(string=>
-                      analyser.parseAll(analyser.lexemes,string)
-                              .get)
-           .toList
+                      analyser.parseAll(analyser.lexemes,string).get).toList
       ,analyser.idTable - "$def")
   }
 }
@@ -90,4 +75,3 @@ object Lab1 extends App {
  * табличка id
  *
  */
-

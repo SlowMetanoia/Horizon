@@ -1,4 +1,4 @@
-package VisualSitsfaction
+package Shorts.VisualSitsfaction
 
 case class ComplexNum(Re:Double,Im:Double) extends Numeric[ComplexNum]{
   def + (that: ComplexNum): ComplexNum = ComplexNum(Re+that.Re,Im+that.Im)

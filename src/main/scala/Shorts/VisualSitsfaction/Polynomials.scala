@@ -1,4 +1,4 @@
-package VisualSitsfaction
+package Shorts.VisualSitsfaction
 
 object Polynomials {
   def makePolynomial(roots: IndexedSeq[ComplexNum]):IndexedSeq[ComplexNum] =

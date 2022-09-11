@@ -6,12 +6,7 @@
   case _:Int => None
 }
 
-val strUpOn: String => String = {str =>
-  val str1 = str.drop(str.indexOf("(")+1)
-  str1.take(str1.lastIndexOf(")"))
-}
-val str = "(dfjvkbgdkbn)"
-strUpOn(str)
+
 
 
 
@@ -44,7 +39,7 @@ strUpOn(str)
 
 val a = Array[Char]('a','b','c','f','n','h','l')
 val b = new Array[Char](a.length)
-def asmScheme = {
+def asmScheme( ): Unit = {
   val n = b.length - 1
   for (i<-a.indices)
     if (i <= n/2)
