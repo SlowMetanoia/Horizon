@@ -1,30 +1,45 @@
 package InfomationDefence
 
+import scala.io.StdIn
+
 object GammaEncode extends App {
+  //Гамма
   class Gamma(key: LazyList[Int]){
+    //кодирующая структура
     def codingStructure(text:String): Seq[(Char, Int)] = text.zip(key.take(text.length))
   }
+  //шифрование
   def encode(gamma: Gamma,text:String):String =
-    gamma.codingStructure(text).map{ case (ch,key) => (key ^ ch).toChar }.mkString
-    
+    gamma
+      .codingStructure(text)
+      .map{ case (ch,key) => (key ^ ch).toChar }
+      .mkString
+  //расшифровывание
   def decode(gamma: Gamma,text:String):String =
-    gamma.codingStructure(text).map{ case (ch,key) => (key ^ ch).toChar }.mkString
+    gamma
+      .codingStructure(text)
+      .map{ case (ch,key) => (key ^ ch).toChar }
+      .mkString
+  //ряд
+  def series[T](prev:T,next:T=>T):LazyList[T] = prev#::series(next(prev),next)
   
-  def series(prev:Int,next:Int=>Int):LazyList[Int] = prev#::series(next(prev),next)
+  def gammaFromString(str:String):Gamma =
+    new Gamma(
+      series[String](str,_=>str)
+        .flatten.map(_.toInt)
+    )
   
-  val N = series(1,_+1)
+  println("Input key:")
+  val gamma = gammaFromString(StdIn.readLine)
   
-  val gamma = new Gamma(N)
+  println("Input source text:")
+  val sourceText = StdIn.readLine()
   
-  val text = "Useless murderer"
-  
-  println(text)
-  
-  val encoded = encode(gamma,text)
-  
+  println("encoded text:")
+  val encoded = encode(gamma,sourceText)
   println(encoded)
   
+  println("decoded text:")
   val decoded = decode(gamma,encoded)
-  
   println(decoded)
 }

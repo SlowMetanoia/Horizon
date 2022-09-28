@@ -7,11 +7,14 @@ object GronsfeldEncode extends App{
   //Ключ
   class CodingKey(key:String){
     //бесконечная последовательность значений равных ключу
-    def repeat:LazyList[String] = key#::repeat
+    def repeat:LazyList[String] =
+      key#::repeat
     //Бесконечно повторяющаяся последовательность символов ключа
-    def fullKey:LazyList[Char] = repeat.flatten
+    def fullKey:LazyList[Char] =
+      repeat.flatten
     //результат сцепления соответствующих элементов последовательности
-    def codingStructure(text:String): Seq[(Char, Char)] = text.zip(fullKey.take(text.length))
+    def codingStructure(text:String): Seq[(Char, Char)] =
+      text.zip(fullKey.take(text.length))
   }
   //закодировать текст
   def encode(key: CodingKey, text:String): String =
@@ -19,9 +22,7 @@ object GronsfeldEncode extends App{
   //декодировать текст
   def decode(key: CodingKey, text:String): String =
     key.codingStructure(text).map{case (symbol,shift) => (symbol-shift).toChar}.mkString
-
-
-
+  
   println("Input key:")
   val key = new CodingKey(StdIn.readLine)
 
