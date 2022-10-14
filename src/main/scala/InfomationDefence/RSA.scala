@@ -5,6 +5,7 @@ import scala.io.StdIn
 import scala.util.Random
 
 object RSA extends App{
+  //Экземпляр ГПСЧ
   val rand = new scala.util.Random()
   //Ряды
   def series[T](prev: T)(next: T => T): LazyList[T] = prev #:: series(next(prev))(next)
@@ -29,10 +30,10 @@ object RSA extends App{
   val somePrimeNumbers = erotothfenFilter(10000).drop(1)
   //Генерирование больших простых чисел с применением критерия полингтона
   def generateBigPrime(edge:BigInt):BigInt  = {
-    
+
     // выбираем случайное простое число
     val initialPrime = somePrimeNumbers(rand.nextInt(somePrimeNumbers.length))
-    
+
     //Получение большого случайного числа в границах от l до r
     def bigRandomInt(l:BigInt,r:BigInt)={
       val cut = r - l
@@ -46,18 +47,18 @@ object RSA extends App{
       }
       BigInt(resultBytes.prepended(resultLeadingByte))
     }
-    
+
     //медленное возведение в степень
     def pow(x: BigInt, y: BigInt): BigInt = {
       var result:BigInt = 1
       var c = y
-      while(c!=0) {
+      while(c>0) {
         result *= x
         c-=1
       }
       result
     }
-    
+
     //увеличение числа с проверкой методом Поллингтона
     @tailrec
     def primeIncreasing(s: BigInt, edge: BigInt): BigInt = s match {
@@ -115,54 +116,62 @@ object RSA extends App{
   //val prime = BigInt.probablePrime(1024,rand)
   println(s"prime = $prime")
   */
-  
+  //Объекты ключей
   abstract class Key(k0:BigInt,k1:BigInt)
   case class PrivateKey(d:BigInt,n:BigInt) extends Key(d,n)
   case class PublicKey(e:BigInt,n:BigInt) extends Key(e,n)
   val random = new Random()
   //Генерация ключей
   def newKeyPair:(PublicKey,PrivateKey) = {
+    //Генерим большие простые по 1024 бита
     val (q,p) = (BigInt.probablePrime(1024,random),BigInt.probablePrime(1024,random))
+    //модуль
     val n = p*q
+    //функция Эйлера от наших простых
     val fi = (p-1)*(q-1)
+    //открытая экспонента
     val e:BigInt = 65537
-    val d = e.modInverse(fi)//inverse(e,fi)
+    //мультипликативно-сопряженное с e по модулю fi, закрытая экспонента
+    val d = e.modInverse(fi)
+    //inverse(e,fi)
     (PublicKey(e,n),PrivateKey(d,n))
   }
-  
+  //char => 2 byte
   def char2Bytes(ch:Char):Seq[Byte] = Seq((ch/256).toByte,(ch%256).toByte)
+  //2 byte => char
   def bytes2Char(bytes:Array[Byte]):Char = (bytes.head * 256 + bytes.last).toChar
-  
-  
+  //шифрование блока
   def encodeBlock(str:String,publicKey: PublicKey):BigInt = {
     val bytes = str.flatMap(char2Bytes).toArray
     BigInt( bytes ).modPow(publicKey.e,publicKey.n)
   }
-  
+  //расшифровывание блока
   def decodeBlock(bi:BigInt,privateKey: PrivateKey):String = {
     var bytes = bi.modPow(privateKey.d,privateKey.n).toByteArray
     if(bytes.length%2==1) bytes = bytes.prepended(0)
     bytes.grouped(2).map(bytes2Char).mkString
   }
-  
+  //шифрование текста
   def encode(str: String, key: PublicKey):Seq[BigInt] = {
     str.grouped(10).toSeq.map(encodeBlock(_,key))
   }
+  //расшифровывание текста
   def decode(values: Seq[BigInt], key: PrivateKey):String = {
     values.map(decodeBlock(_,key)).mkString
   }
-  
+
+  //генерируем пару ключей
   val (publicKey,privateKey) = newKeyPair
-  
+
   println("Input source text:")
   val sourceText = StdIn.readLine()
-  
+
   println("encoded text:")
   val encoded = encode(sourceText,publicKey)
   println(encoded)
-  
+
   println("decoded text:")
   val decoded = decode(encoded,privateKey)
   println(decoded)
-  
+
 }
