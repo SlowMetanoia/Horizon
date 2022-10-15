@@ -100,3 +100,5 @@ val feistelTransposition =
       |2	8	24	14	32	27	3	9
       |19	13	30	6	22	11	4	25
       |""".stripMargin).flatten
+
+Char.MinValue.toLong
