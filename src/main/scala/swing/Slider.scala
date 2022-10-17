@@ -1,9 +1,9 @@
 package swing
 
 import java.awt.Toolkit
-import javax.swing.{JFrame, JPanel}
+import javax.swing.{JFrame, JPanel, JSlider}
 
-object AATemplate {
+object Slider extends App{
 
   //-----------------------------------Template--------------------------------------------------
   val jFrame = new JFrame()
@@ -23,7 +23,10 @@ object AATemplate {
     dimension.height/2 - windowSize._2/2,
     windowSize._1,
     windowSize._2)
-  jFrame.repaint()
   //--------------------------------------------------New code---------------------------------------
+  val jSlider = new JSlider(0,0,100,50)
+  jPanel.add(jSlider)
+
+  jFrame.repaint()
 
 }

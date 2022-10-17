@@ -1,10 +1,9 @@
-package swing
+package CG
 
-import java.awt.Toolkit
+import java.awt.{Color, Toolkit}
 import javax.swing.{JFrame, JPanel}
 
-object AATemplate {
-
+object CGMain extends App{
   //-----------------------------------Template--------------------------------------------------
   val jFrame = new JFrame()
   val jPanel = new JPanel()

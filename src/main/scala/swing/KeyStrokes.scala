@@ -8,6 +8,9 @@ import javax.swing.{AbstractAction, Action, InputMap, JButton, JComponent, JFram
 
 object KeyStrokes extends App {
 
+  final object ks
+
+
   val jFrame = new JFrame()
   val toolkit = Toolkit.getDefaultToolkit
   val dimension = toolkit.getScreenSize
@@ -24,10 +27,20 @@ object KeyStrokes extends App {
     windowSize._2)
 
   val jPanel = new JPanel()
+  object MyAction extends AbstractAction{
+    override def actionPerformed(e: ActionEvent): Unit = {
+      jPanel.setBackground(new Color(20,100,150))
+    }
+    putValue(Action.SHORT_DESCRIPTION,"does some little action")
+  }
   val jButton = new JButton(MyAction)
   val keyStroke = KeyStroke.getKeyStroke("ctrl B")
+
   val inputMap = jPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-  inputMap.put(keyStroke,"changeColor")
+  inputMap.put(keyStroke,ks)
+  val actionMap = jPanel.getActionMap
+  actionMap.put(ks,MyAction)
+
   jButton.setText("submit")
   //jButton.setBounds(10,10,70,20)
 
@@ -36,11 +49,5 @@ object KeyStrokes extends App {
 
   jFrame.setTitle("MyApp")
 
-  object MyAction extends AbstractAction{
-    override def actionPerformed(e: ActionEvent): Unit = {
-      jPanel.setBackground(new Color(20,100,150))
-    }
-    putValue(Action.SHORT_DESCRIPTION,"does some little action")
-  }
   jFrame.repaint()
 }
