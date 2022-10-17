@@ -106,16 +106,7 @@ object RSA extends App{
     }
     t+n
   }
-  /*
-  //Тесты для генератора простых.
-  //val rand = new scala.util.Random()
-  val two:BigInt = 2
-  val x = two pow 20
-  println(s"x = $x")
-  val prime = generateBigPrime(x)
-  //val prime = BigInt.probablePrime(1024,rand)
-  println(s"prime = $prime")
-  */
+
   //Объекты ключей
   abstract class Key(k0:BigInt,k1:BigInt)
   case class PrivateKey(d:BigInt,n:BigInt) extends Key(d,n)
@@ -163,6 +154,7 @@ object RSA extends App{
   //генерируем пару ключей
   val (publicKey,privateKey) = newKeyPair
 
+  //Ввод-вывод для примеров.
   println("Input source text:")
   val sourceText = StdIn.readLine()
 

@@ -15,9 +15,12 @@ case class DES(key:String){
     if(realKeyString.exists(_.toInt > 255))
       throw new IllegalArgumentException("Input string must contain only ascii symbols")
     val realKey = BitMap(
-      realKeyString.zipWithIndex.map{case (char,i) => char.toInt * math.pow(256,i).toLong}.sum
+      realKeyString
+        .zipWithIndex
+        .map{case (char,i) => char.toInt * math.pow(256,i).toLong}
+        .sum
     )
-    //все возможные перестановки начального ключа
+    //перестановки начального ключа
     val transpositions = {
       val transpositionArr = new Array[(Seq[Int],Seq[Int])](16)
       transpositionArr(0) = (keyC0,keyD0)
@@ -33,6 +36,7 @@ case class DES(key:String){
       transpositionArr.toSeq
     }.map(p=>p._1.appendedAll(p._2))
 
+    //получившиеся ключи
     val keys = transpositions.map(realKey.transposed).map(_.choose(keyChoose))
     keys
   }
@@ -49,6 +53,7 @@ case class DES(key:String){
     //сожжение с ключом по модулю 2
     r = r ^ key
     //функция сжатия
+    //ничего не понятно, но очень функционально
     val result = BitMap{
       r.bits.grouped(6).take(8).zip(compressionTables).map {
         case (bits, table) =>
@@ -63,9 +68,8 @@ case class DES(key:String){
     result.transposed(feistelTransposition)
   }
 
-  //кодирование 1 блока.
+  //кодирование 1 блока
   def encodeBlock(x:Long):Long = {
-
     //смена представления
     val value = BitMap(x)
     //начальная перестановка
@@ -83,6 +87,8 @@ case class DES(key:String){
     //соединение левой и правой части, конечная перестановка.
     BitMap.fromBitHalfs(l,r).transposed(endTransposition).value
   }
+
+  //декодирование 1 блока
   def decodeBlock(x:Long):Long = {
     //смена представления
     val value = BitMap(x)
@@ -101,6 +107,7 @@ case class DES(key:String){
     //соединение левой и правой части, конечная перестановка.
     BitMap.fromBitHalfs(l,r).transposed(endTransposition).value
   }
+
   //кодирование в режиме электронной кодовой книги
   def ECBEncode[T](transformation:T=>Seq[Long],values:Seq[T]):Seq[Seq[Long]] =
     values
@@ -125,7 +132,9 @@ case class DES(key:String){
     }
 
   //кодирование в режиме обратной связи по выходу
-  def OFBEncode[T](transformation:T=>Seq[Long], initVector:Long, values:Seq[T]):Seq[Seq[Long]] = {
+  def OFBEncode[T](transformation:T=>Seq[Long],
+                   initVector:Long,
+                   values:Seq[T]):Seq[Seq[Long]] = {
 
     //итератор по ключам.
     val keyStream: Iterator[Long] = keyIterator(initVector)
@@ -137,7 +146,9 @@ case class DES(key:String){
   }
 
   //декодирование в режиме обратной связи по выходу
-  def OFBDecode[T](transformation:Seq[Long]=>T,encodedValues:Seq[Seq[Long]],initVector:Long):Seq[T] = {
+  def OFBDecode[T](transformation:Seq[Long]=>T,
+                   encodedValues:Seq[Seq[Long]],
+                   initVector:Long):Seq[T] = {
     //итератор по ключам.
     val keyStream: Iterator[Long] = keyIterator(initVector)
 

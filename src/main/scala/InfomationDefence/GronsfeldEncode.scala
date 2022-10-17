@@ -22,7 +22,9 @@ object GronsfeldEncode extends App{
   //декодировать текст
   def decode(key: CodingKey, text:String): String =
     key.codingStructure(text).map{case (symbol,shift) => (symbol-shift).toChar}.mkString
-  
+
+
+  //Ввод-вывод
   println("Input key:")
   val key = new CodingKey(StdIn.readLine)
 

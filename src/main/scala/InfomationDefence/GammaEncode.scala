@@ -8,12 +8,14 @@ object GammaEncode extends App {
     //кодирующая структура
     def codingStructure(text:String): Seq[(Char, Int)] = text.zip(key.take(text.length))
   }
+
   //шифрование
   def encode(gamma: Gamma,text:String):String =
     gamma
       .codingStructure(text)
       .map{ case (ch,key) => (key ^ ch).toChar }
       .mkString
+
   //расшифровывание
   def decode(gamma: Gamma,text:String):String =
     gamma
@@ -22,13 +24,16 @@ object GammaEncode extends App {
       .mkString
   //ряд
   def series[T](prev:T,next:T=>T):LazyList[T] = prev#::series(next(prev),next)
-  
+
+  //Получение гаммы из строки
   def gammaFromString(str:String):Gamma =
     new Gamma(
       series[String](str,_=>str)
-        .flatten.map(_.toInt)
+        .flatten
+        .map(_.toInt)
     )
-  
+
+  //Ввод-вывод:
   println("Input key:")
   val gamma = gammaFromString(StdIn.readLine)
   

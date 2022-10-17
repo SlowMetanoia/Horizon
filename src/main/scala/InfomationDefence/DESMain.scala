@@ -16,10 +16,16 @@ object DESMain extends App{
   println(s"decoded = $decoded")
   */
 
-  def str2Longs(text:String):Seq[Long] = text.grouped(4).map(cc=> cc.zipWithIndex.map{
+  //Перегонка строки в long
+  def str2Longs(text:String):Seq[Long] =
+    text
+      .grouped(4)
+      .map(cc=> cc.zipWithIndex.map{
     case (e,i) => e * math.pow(Char.MaxValue,i).toLong
-  }.sum).toSeq
+  }.sum)
+      .toSeq
 
+  //Перегонка Long в строку
   def longs2Str(longs:Seq[Long]):String =
     longs
       .flatMap(x=>
@@ -29,6 +35,7 @@ object DESMain extends App{
       }
       .mkString
 
+  //----------------------------- Ввод-вывод --------------------------------
   println("Input initString:")
   val initString = StdIn.readLine()
 
@@ -50,18 +57,22 @@ object DESMain extends App{
   println("Input source text:")
   val sourceText = StdIn.readLine()
 
+  //Кодирование для режима ECB
   println("ECB encoded text:")
   val ecbEncoded = desInstance.ECBEncode(str2Longs,Seq(sourceText))
   println(ecbEncoded)
 
+  //Кодирование для режима OFD
   println("OFB encoded text:")
   val ofbEncoded = desInstance.OFBEncode(str2Longs,initVector,Seq(sourceText))
   println(ofbEncoded)
 
+  //декодирование для режима ECB
   println("decoded ECB text:")
   val ecbDecoded = desInstance.ECBDecode(longs2Str,ecbEncoded)
   println(ecbDecoded.mkString)
 
+  //декодирование для режима OFD
   println("decoded OFB text:")
   val ofbDecoded = desInstance.OFBDecode(longs2Str,ofbEncoded,initVector)
   println(ofbDecoded.mkString)
