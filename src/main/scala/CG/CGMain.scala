@@ -1,7 +1,9 @@
 package CG
 
-import java.awt.{Color, Toolkit}
-import javax.swing.{JFrame, JPanel}
+import java.awt.{ Graphics, Toolkit }
+import java.awt.geom.{ Line2D, Point2D }
+import javax.swing.{ JComponent, JFrame, JPanel }
+import scala.swing.Graphics2D
 
 object CGMain extends App{
   //-----------------------------------Template--------------------------------------------------
@@ -24,5 +26,38 @@ object CGMain extends App{
     windowSize._2)
   jFrame.repaint()
   //--------------------------------------------------New code---------------------------------------
-
+  val p1 = new Point2D.Double(10,10)
+  val p2 = new Point2D.Double(100,10)
+  val p3 = new Point2D.Double(10,100)
+  val cut1 = new Line2D.Double(p1,p2)
+  val cut2 = new Line2D.Double(p1,p3)
+  val cut3 = new Line2D.Double(p2,p3)
+  
+  def transform(x:Double,y:Double):(Double,Double) = (x-10,y+20)
+  
+  def transformPoint(f:(Double,Double)=>(Double,Double)):Point2D=>Point2D = { p=>
+    val (x,y) = f(p.getX,p.getY)
+    new Point2D.Double(x,y)
+  }
+  
+  def transformLine(f:(Double,Double)=>(Double,Double)):Line2D=>Line2D = l => new Line2D.Double(
+    transformPoint(f)(l.getP1),
+    transformPoint(f)(l.getP2)
+    )
+  
+  
+  object myComponent extends JComponent{
+    override protected def paintComponent( g: Graphics ): Unit = {
+      super.paintComponent(g)
+      val g2d = g.asInstanceOf[Graphics2D]
+      g2d.draw(cut1)
+      g2d.draw(cut2)
+      g2d.draw(cut3)
+      g2d.draw(transformLine(transform)(cut1))
+      g2d.draw(transformLine(transform)(cut2))
+      g2d.draw(transformLine(transform)(cut3))
+    }
+  }
+  jFrame.add(myComponent)
+  jFrame.revalidate()
 }
