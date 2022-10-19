@@ -15,16 +15,19 @@ case class BitMap(var value:Long){
   def testBit(i:Int):Boolean = (value & singleBitMask(i)) != 0
   //поднять i бит
   def setBit(i:Int):Unit = if(!testBit(i)) value+=singleBitMask(i)
-  //опустить i бит в 0
+  //опустить i бит
   def dropBit(i:Int):Unit = if(testBit(i)) value-=singleBitMask(i)
   //изменить значение бита на противоположное
   def flipBit(i:Int):Unit =
     if(testBit(i)) value -= singleBitMask(i)
     else value += singleBitMask(i)
+    
+  //Применить перестановку
   def transpose(transposition:Seq[Int]):Unit = {
     val bits = this.bits
     for(i<-transposition.indices) update(i,bits(transposition(i)))
   }
+  //Создать новый битмап и применить перестановку к нему.
   def transposed(transposition:Seq[Int]):BitMap = {
     val bm = BitMap(this)
     bm.transpose(transposition)
@@ -45,7 +48,7 @@ case class BitMap(var value:Long){
   //половинки числа, каждая убирается в Int
   def bitHalfs: (BitMap,BitMap) = (BitMap(bits.take(32)),BitMap(bits.drop(32)))
 
-  //выбор битов по позициям. Честно говоря, почти перестановка, но создаёт новый экземпляр
+  //выбор битов по позициям. В точности то, что делает перестановка, но семантический смысл другой.
   def choose(bitPositions:Seq[Int]): BitMap =
     BitMap(for(i<-bitPositions) yield testBit(i))
 
@@ -77,6 +80,7 @@ object BitMap{
       .zip(singleBitMask)
       .collect{case (true,num) => num}.sum
   )
+  //фабричные методы
   def apply(bitMap:BitMap): BitMap = BitMap(bitMap.value)
   def fromBitHalfs(bm0:BitMap,bm1:BitMap):BitMap = BitMap(bm0.bits.take(32).appendedAll(bm1.bits.take(32)))
 }

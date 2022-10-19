@@ -26,8 +26,10 @@ object RSA extends App{
     }
     naturals.filter(_!=0)
   }
+  
   //Первые сколько-то простых
   val somePrimeNumbers = erotothfenFilter(10000).drop(1)
+  
   //Генерирование больших простых чисел с применением критерия полингтона
   def generateBigPrime(edge:BigInt):BigInt  = {
 
