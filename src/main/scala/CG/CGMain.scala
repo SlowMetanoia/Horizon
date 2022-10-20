@@ -1,11 +1,13 @@
 package CG
 
-import java.awt.{ Graphics, Toolkit }
-import java.awt.geom.{ Line2D, Point2D }
-import javax.swing.{ JComponent, JFrame, JPanel }
+import java.awt.{Graphics, Shape, Toolkit}
+import java.awt.geom.{AffineTransform, Line2D, Point2D}
+import javax.swing.{JComponent, JFrame, JPanel}
 import scala.swing.Graphics2D
 
 object CGMain extends App{
+  //ряды
+  def series[T](prev:T)(next:T=>T):LazyList[T] = prev#::series(next(prev))(next)
   //-----------------------------------Template--------------------------------------------------
   val jFrame = new JFrame()
   val jPanel = new JPanel()
@@ -32,32 +34,54 @@ object CGMain extends App{
   val cut1 = new Line2D.Double(p1,p2)
   val cut2 = new Line2D.Double(p1,p3)
   val cut3 = new Line2D.Double(p2,p3)
-  
-  def transform(x:Double,y:Double):(Double,Double) = (x-10,y+20)
-  
-  def transformPoint(f:(Double,Double)=>(Double,Double)):Point2D=>Point2D = { p=>
-    val (x,y) = f(p.getX,p.getY)
-    new Point2D.Double(x,y)
+
+  val xT = new AffineTransform(-0.5,0,0,-0.5,100,100)
+
+  case class LazyNode[T](value:T,generateChildren:T=>Seq[T],lvl:Int){
+    lazy val children: Seq[T] = generateChildren(value)
   }
-  
-  def transformLine(f:(Double,Double)=>(Double,Double)):Line2D=>Line2D = l => new Line2D.Double(
-    transformPoint(f)(l.getP1),
-    transformPoint(f)(l.getP2)
+  case class LazyTree[T](rootValue:T)(generateChildren:T=>Seq[T]){
+    val actualTree: LazyNode[T] = LazyNode(rootValue,generateChildren,0)
+  }
+
+  def SIF(
+           affineTransformations:Seq[AffineTransform]
+         ):LazyTree[AffineTransform] =
+    LazyTree(new AffineTransform())(
+      at => affineTransformations.map {
+        x => val result = new AffineTransform(at)
+          result.concatenate(x)
+          result
+      }
     )
-  
-  
+
   object myComponent extends JComponent{
     override protected def paintComponent( g: Graphics ): Unit = {
       super.paintComponent(g)
       val g2d = g.asInstanceOf[Graphics2D]
+
       g2d.draw(cut1)
       g2d.draw(cut2)
       g2d.draw(cut3)
-      g2d.draw(transformLine(transform)(cut1))
-      g2d.draw(transformLine(transform)(cut2))
-      g2d.draw(transformLine(transform)(cut3))
     }
   }
+
   jFrame.add(myComponent)
+  jFrame.add(
+    new JComponent{
+    override protected def paintComponent( g: Graphics ): Unit = {
+      super.paintComponent(g)
+      val g2d = g.asInstanceOf[Graphics2D]
+
+      g2d.transform(xT)
+
+      g2d.draw(cut1)
+      g2d.draw(cut2)
+      g2d.draw(cut3)
+    }
+  })
+
+
   jFrame.revalidate()
 }
+
