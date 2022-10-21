@@ -1,10 +1,10 @@
 package CG
 
-import CG.CGMain.sifVisual.SIF
+import CG.CGMain.sifVisual.{LazyTree, SIF}
 
-import java.awt.geom.{ AffineTransform, Line2D, Point2D }
-import java.awt.{ Graphics, Shape, Toolkit }
-import javax.swing.{ JComponent, JFrame, JPanel }
+import java.awt.geom.{AffineTransform, Line2D, Point2D}
+import java.awt.{BasicStroke, Graphics, Shape, Stroke, Toolkit}
+import javax.swing.{JComponent, JFrame, JPanel}
 import scala.swing.Graphics2D
 
 object CGMain extends App{
@@ -31,9 +31,9 @@ object CGMain extends App{
   val startTransposition = new AffineTransform(1,0,0,-1,windowCenter._1,windowCenter._2)
   
   //Относительный размер единицы
-  //val unitRelativeSize = 40
+  val unitRelativeSize = 40
   
-  //startTransposition.concatenate(new AffineTransform(unitRelativeSize,0,0,unitRelativeSize,0,0))
+  startTransposition.concatenate(new AffineTransform(unitRelativeSize,0,0,unitRelativeSize,0,0))
   
   
   jFrame.setTitle("MyApp")
@@ -54,7 +54,16 @@ object CGMain extends App{
 
   val xT = new AffineTransform(-0.5,0,0,-0.5,100,100)
   
-  
+  class DrawableComponent(paint:Graphics2D=>Unit) extends JComponent{
+    override def paintComponent(g: Graphics): Unit = {
+      super.paintComponent(g)
+      val g2d = g.asInstanceOf[Graphics2D]
+      g2d.setStroke(new BasicStroke(0))
+      g2d.setTransform(startTransposition)
+      paint.apply(g2d)
+    }
+
+  }
     
   case class sifVisual( initials:Seq[Shape], ats:Seq[AffineTransform]){
     def composeJComponent(lvl:Int):JComponent = {
@@ -136,16 +145,18 @@ object CGMain extends App{
 //      g2d.draw(cut3)
 //    }
 //  })
-  val testZOLine = new JComponent {
-  override def paintComponent( g: Graphics ): Unit = {
-    super.paintComponent(g)
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.draw(new Line2D.Double(0,10,40,10))
-    g2d.setTransform(startTransposition)
-    g2d.draw(new Line2D.Double(0,0,1,1))
-  }
-}
-  jFrame.add(testZOLine)
+  val testZOLine = new DrawableComponent(
+  g2d=>
+    g2d.drawLine(0,0,1,0)
+)
+  val initials = Seq(new Line2D.Double(0,0,1,0))
+  val affineTransforms = Seq(
+    new AffineTransform(1/3,0,0,1,0,0),
+    new AffineTransform(1/3,0,0,0,2/3,0)
+  )
+  val sif = sifVisual(initials,affineTransforms)
+
+  jFrame.add(sif.composeJComponent(0))
 
   jFrame.revalidate()
 }
