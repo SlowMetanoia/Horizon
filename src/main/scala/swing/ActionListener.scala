@@ -20,10 +20,12 @@ object ActionListener extends App{
   )
   jFrame.setVisible(true)
   jFrame.setDefaultCloseOperation(1)
-  jFrame.setBounds(dimension.width/2 - windowSize._1/2,
-                   dimension.height/2 - windowSize._2/2,
-                   windowSize._1,
-                   windowSize._2)
+  jFrame.setBounds(
+    dimension.width/2 - windowSize._1/2,
+    dimension.height/2 - windowSize._2/2,
+    windowSize._1,
+    windowSize._2
+    )
   jFrame.setTitle("MyApp")
   jFrame.add(jPanel)
 }

@@ -51,6 +51,8 @@ object FirstSteps extends App{
       
       
     }
+    
   }
+  jFrame.getGraphics.drawLine(0,0,40,40)
 }
 
