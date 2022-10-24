@@ -1,9 +1,9 @@
 package CG
 
 import java.awt.geom.AffineTransform
-import java.awt.{BasicStroke, Color, Stroke, Toolkit}
+import java.awt.{ BasicStroke, Color, Stroke, Toolkit }
 import javax.swing.JFrame
-import scala.swing.{Color, Dimension}
+import scala.swing.Dimension
 
 object JFrameBasics {
   val jFrame: JFrame = new JFrame()
@@ -13,12 +13,12 @@ object JFrameBasics {
   val relativeScreenSize: (Double, Double)= (0.5, 0.5)
   
 
-  val windowSize = (
-    (dimension.width*relativeScreenSize._1).toInt,
-    (dimension.height*relativeScreenSize._2).toInt
+  val windowSize: (Int, Int) = (
+    1300,
+    700
   )
   
-  val windowCenter: (Int, Int) = (windowSize._1 /2, windowSize._2 /2)
+  val windowCenter: (Int, Int) = (350, 350)
   
   //Из центра экрана
   val startTransposition = new AffineTransform(1,0,0,-1,windowCenter._1,windowCenter._2)

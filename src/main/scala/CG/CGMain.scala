@@ -1,18 +1,88 @@
 package CG
 
-import java.awt.event.{MouseAdapter, MouseEvent}
-import java.awt.{BasicStroke, Color, Graphics, Shape}
-import java.awt.geom.{AffineTransform, Line2D, Point2D}
-import javax.swing.JComponent
-import scala.swing.{Color, Graphics2D}
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.geom.{ AffineTransform, Line2D, Point2D }
+import java.awt.{ Color, Graphics, Shape }
+import javax.swing.{ JComponent, JPanel }
+import scala.swing.Graphics2D
 
 object CGMain extends App{
   //ряды
   def series[T](prev:T)(next:T=>T):LazyList[T] = prev#::series(next(prev))(next)
+  //Всяческий сетап и рисование формочек
   val jFrame = JFrameBasics.jFrame
   val setupTransformation = JFrameBasics.startTransposition
   val stroke = JFrameBasics.stroke
-
+  //предварительные настройки
+  var isGlitching = true
+  //панельки
+  val workPanel = new JPanel()
+  workPanel.setBounds(0,0,700,700)
+  //workPanel.setBackground(new Color(0,0,0,255))
+  val workSettingsPanel = new JPanel()
+  workSettingsPanel.setBounds(700,0,600,460)
+  //workSettingsPanel.setBackground(Color.GRAY)
+  val otherSettingsPanel = new JPanel()
+  //otherSettingsPanel.setBackground(Color.DARK_GRAY)
+  otherSettingsPanel.setBounds(700,460,240,600)
+  
+  val transformations = Seq(
+    new AffineTransform(1.0 / 3, 0, 0, 1, 0, 0),
+    new AffineTransform(1.0 / 3, 0, 0, 1, 2.0 / 3, 0)
+    )
+  
+  
+  val transformationList = transformationsList(transformations)
+  var lastPoint:Option[Point2D] = None
+  var cuts:Seq[Line2D] = Seq.empty
+  
+  val all =
+    generateComponentByTransformations(
+      transformationList(4),
+      Seq(new Line2D.Double(0, 0, 1, 0))
+      )
+      
+  all.setBounds(0,0,700,700)
+  jFrame.add(all)
+  
+  jFrame.add(workPanel)
+  jFrame.add(workSettingsPanel)
+  jFrame.add(otherSettingsPanel)
+  
+  
+  
+  var mousePoint:Point2D = new Point2D.Double(0,0)
+  
+  jFrame.revalidate()
+  
+  all.addMouseMotionListener(
+    new MouseAdapter {
+      override def mouseMoved(e: MouseEvent): Unit = {
+        super.mouseMoved(e)
+        mousePoint = JFrameBasics.invertedStartTransposition.transform(new Point2D.Double(e.getX,e.getY),null)
+        if(isGlitching) mousePoint = new Point2D.Double(mousePoint.getX.round,mousePoint.getY.round)
+        all.repaint()
+      }
+    }
+    )
+  
+  all.addMouseListener(
+    new MouseAdapter {
+      override def mouseClicked(e: MouseEvent): Unit = {
+        super.mouseClicked(e)
+        lastPoint match {
+          case None =>
+            lastPoint = Some(mousePoint)
+          case Some(point) =>
+            lastPoint = None
+            cuts = cuts.appended( new Line2D.Double(point,mousePoint))
+        }
+      }
+    }
+    )
+  
+  
+  
   def transformationsList(affineTransforms:Seq[AffineTransform]):LazyList[Seq[AffineTransform]] = {
     series[Seq[AffineTransform]](Seq(new AffineTransform())) { transforms =>
       transforms.flatMap { t0 =>
@@ -45,7 +115,7 @@ object CGMain extends App{
           else
             g2d.draw(line)
         )
-
+        //отрисовка фрактала
         g2d.setColor(Color.BLACK)
         g2d.setStroke(stroke)
         transforms.foreach{ xT=>
@@ -53,19 +123,14 @@ object CGMain extends App{
           g2d.transform(xT)
           shapes.foreach(g2d.draw)
         }
-        cuts.foreach(cut=>println(s"${cut.getP1.getX},${cut.getP1.getY},${cut.getP2.getX},${cut.getP2.getY}"))
+        //отрисовка отрезков
+        g2d.setTransform(setupTransformation)
         cuts.foreach(g2d.draw)
         lastPoint.foreach(point=> g2d.draw(new Line2D.Double(point,mousePoint)))
       }
     }
   }
-
-  val transformations = Seq(
-    new AffineTransform(1.0 / 3, 0, 0, 1, 0, 0),
-    new AffineTransform(1.0 / 3, 0, 0, 1, 2.0 / 3, 0)
-  )
-  val transformationList = transformationsList(transformations)
-
+  
   def grid(size:Int):Seq[Shape] = {
     (-size to size).flatMap{ i=>
       Seq(
@@ -74,45 +139,4 @@ object CGMain extends App{
       )
     }
   }
-
-  var lastPoint:Option[Point2D] = None
-  var cuts:Seq[Line2D] = Seq.empty
-
-  val all =
-    generateComponentByTransformations(
-      transformationList(4),
-      Seq(new Line2D.Double(0, 0, 1, 0))
-    )
-
-  jFrame.add(
-    all
-  )
-  var mousePoint:Point2D = new Point2D.Double(0,0)
-
-  all.addMouseMotionListener(
-    new MouseAdapter {
-      override def mouseMoved(e: MouseEvent): Unit = {
-        super.mouseMoved(e)
-        mousePoint = JFrameBasics.invertedStartTransposition.transform(new Point2D.Double(e.getX,e.getY),null)
-        all.repaint()
-      }
-    }
-  )
-
-  all.addMouseListener(
-    new MouseAdapter {
-      override def mouseClicked(e: MouseEvent): Unit = {
-        super.mouseClicked(e)
-        lastPoint match {
-          case None =>
-            lastPoint = Some(mousePoint)
-          case Some(point) =>
-            lastPoint = None
-            cuts = cuts.appended( new Line2D.Double(point,mousePoint))
-        }
-      }
-    }
-  )
-
-  jFrame.revalidate()
 }
