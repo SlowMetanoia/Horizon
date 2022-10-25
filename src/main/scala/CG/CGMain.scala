@@ -3,7 +3,7 @@ package CG
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.awt.geom.{ AffineTransform, Line2D, Point2D }
 import java.awt.{ Color, Graphics, Shape }
-import javax.swing.{ JComponent, JPanel }
+import javax.swing.{ JComponent, JPanel, JToggleButton }
 import scala.swing.Graphics2D
 
 object CGMain extends App{
@@ -14,7 +14,7 @@ object CGMain extends App{
   val setupTransformation = JFrameBasics.startTransposition
   val stroke = JFrameBasics.stroke
   //предварительные настройки
-  var isGlitching = true
+  var isBinding = true
   //панельки
   val workPanel = new JPanel()
   workPanel.setBounds(0,0,700,700)
@@ -45,11 +45,12 @@ object CGMain extends App{
   all.setBounds(0,0,700,700)
   jFrame.add(all)
   
-  jFrame.add(workPanel)
   jFrame.add(workSettingsPanel)
   jFrame.add(otherSettingsPanel)
   
+  val bindingButton = new JToggleButton("Включить привязку к сетке")
   
+  bindingButton.addActionListener(_ => isBinding = !isBinding)
   
   var mousePoint:Point2D = new Point2D.Double(0,0)
   
@@ -60,7 +61,7 @@ object CGMain extends App{
       override def mouseMoved(e: MouseEvent): Unit = {
         super.mouseMoved(e)
         mousePoint = JFrameBasics.invertedStartTransposition.transform(new Point2D.Double(e.getX,e.getY),null)
-        if(isGlitching) mousePoint = new Point2D.Double(mousePoint.getX.round,mousePoint.getY.round)
+        if(isBinding) mousePoint = new Point2D.Double(mousePoint.getX.round, mousePoint.getY.round)
         all.repaint()
       }
     }
