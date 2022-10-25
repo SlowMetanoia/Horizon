@@ -1,12 +1,12 @@
 package CG
 
-import java.awt.event.{ MouseAdapter, MouseEvent }
-import java.awt.geom.{ AffineTransform, Line2D, Point2D }
-import java.awt.{ Color, Graphics, Shape }
-import javax.swing.{ JComponent, JPanel, JToggleButton }
+import java.awt.event.{MouseAdapter, MouseEvent}
+import java.awt.geom.{AffineTransform, Line2D, Point2D}
+import java.awt.{BorderLayout, Color, Graphics, Shape}
+import javax.swing.{JButton, JComponent, JLabel, JPanel, JTextField, JToggleButton}
 import scala.swing.Graphics2D
 
-object CGMain extends App{
+object SIFMain extends App{
   //ряды
   def series[T](prev:T)(next:T=>T):LazyList[T] = prev#::series(next(prev))(next)
   //Всяческий сетап и рисование формочек
@@ -14,54 +14,59 @@ object CGMain extends App{
   val setupTransformation = JFrameBasics.startTransposition
   val stroke = JFrameBasics.stroke
   //предварительные настройки
-  var isBinding = true
+  var isBindingToGrid = true
   //панельки
   val workPanel = new JPanel()
-  workPanel.setBounds(0,0,700,700)
+  //workPanel.setBounds(0,0,700,700)
   //workPanel.setBackground(new Color(0,0,0,255))
   val workSettingsPanel = new JPanel()
-  workSettingsPanel.setBounds(700,0,600,460)
+  //workSettingsPanel.setBounds(700,0,600,460)
   //workSettingsPanel.setBackground(Color.GRAY)
   val otherSettingsPanel = new JPanel()
+  otherSettingsPanel.add(new JButton("one"))
+  otherSettingsPanel.add(new JButton("one"))
+  otherSettingsPanel.add(new JButton("one"))
+  otherSettingsPanel.add(new JButton("one"))
   //otherSettingsPanel.setBackground(Color.DARK_GRAY)
-  otherSettingsPanel.setBounds(700,460,240,600)
-  
+  //otherSettingsPanel.setBounds(700,460,240,600)
+
   val transformations = Seq(
     new AffineTransform(1.0 / 3, 0, 0, 1, 0, 0),
     new AffineTransform(1.0 / 3, 0, 0, 1, 2.0 / 3, 0)
     )
-  
-  
+
   val transformationList = transformationsList(transformations)
   var lastPoint:Option[Point2D] = None
   var cuts:Seq[Line2D] = Seq.empty
-  
+
   val all =
     generateComponentByTransformations(
       transformationList(4),
       Seq(new Line2D.Double(0, 0, 1, 0))
       )
-      
-  all.setBounds(0,0,700,700)
-  jFrame.add(all)
-  
-  jFrame.add(workSettingsPanel)
-  jFrame.add(otherSettingsPanel)
-  
-  val bindingButton = new JToggleButton("Включить привязку к сетке")
-  
-  bindingButton.addActionListener(_ => isBinding = !isBinding)
-  
+
+  //all.setBounds(0,0,700,700)
+  jFrame.add(all, BorderLayout.CENTER)
+
+  jFrame.add(workSettingsPanel, BorderLayout.WEST)
+  jFrame.add(otherSettingsPanel, BorderLayout.WEST)
+  workSettingsPanel.revalidate()
+  otherSettingsPanel.revalidate()
+
+  val gridBindingButton = new JToggleButton("Включить привязку к сетке")
+
+  gridBindingButton.addActionListener(_ => isBindingToGrid = !isBindingToGrid)
+
   var mousePoint:Point2D = new Point2D.Double(0,0)
-  
+
   jFrame.revalidate()
-  
+
   all.addMouseMotionListener(
     new MouseAdapter {
       override def mouseMoved(e: MouseEvent): Unit = {
         super.mouseMoved(e)
         mousePoint = JFrameBasics.invertedStartTransposition.transform(new Point2D.Double(e.getX,e.getY),null)
-        if(isBinding) mousePoint = new Point2D.Double(mousePoint.getX.round, mousePoint.getY.round)
+        if(isBindingToGrid) mousePoint = new Point2D.Double(mousePoint.getX.round, mousePoint.getY.round)
         all.repaint()
       }
     }

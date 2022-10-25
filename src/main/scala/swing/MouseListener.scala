@@ -3,10 +3,12 @@ package swing
 
 import java.awt.{Color, Graphics, Toolkit}
 import java.awt.event.{MouseAdapter, MouseEvent, MouseListener}
+import java.awt.geom.{Line2D, Point2D}
 import javax.swing.{JComponent, JFrame, JPanel}
 import scala.swing.Graphics2D
 
 object MouseListener extends App{
+  var cuts:Seq[Line2D] = Seq.empty
   val jFrame = new JFrame()
   val jPanel = new JPanel()
   jFrame.add(jPanel)
@@ -42,6 +44,7 @@ object MouseListener extends App{
       super.paintComponent(g)
       val g2d = g.asInstanceOf[Graphics2D]
       g2d.drawString(s"Coordinates: x = $xC; y = $yC",50,50)
+      cuts.foreach(g2d.draw)
     }
   }
   jFrame.add(MyComponent)
@@ -51,6 +54,16 @@ object MouseListener extends App{
       MyComponent.xC = e.getX
       MyComponent.yC = e.getY
       MyComponent.repaint()
+    }
+    override def mouseDragged(e: MouseEvent): Unit = {
+      super.mouseDragged(e)
+      val curpoint = new Point2D.Double(e.getX,e.getY)
+      if(cuts.isEmpty)
+        cuts = Seq(new Line2D.Double(curpoint,curpoint))
+      else {
+        cuts = cuts.appended(new Line2D.Double(cuts.last.getP2, curpoint))
+        MyComponent.repaint()
+      }
     }
   })
 }
