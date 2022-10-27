@@ -1,9 +1,9 @@
 package CG
 
-import java.awt.event.{MouseAdapter, MouseEvent}
-import java.awt.geom.{AffineTransform, Line2D, Point2D}
-import java.awt.{BorderLayout, Color, Graphics, Shape}
-import javax.swing.{JButton, JComponent, JLabel, JPanel, JTextField, JToggleButton}
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.geom.{ AffineTransform, Line2D, Point2D }
+import java.awt.{ BorderLayout, Color, Graphics, Shape }
+import javax.swing.{ JButton, JComponent, JPanel, JToggleButton }
 import scala.swing.Graphics2D
 
 object SIFMain extends App{
@@ -44,8 +44,7 @@ object SIFMain extends App{
       transformationList(4),
       Seq(new Line2D.Double(0, 0, 1, 0))
       )
-
-  //all.setBounds(0,0,700,700)
+  
   jFrame.add(all, BorderLayout.CENTER)
 
   jFrame.add(workSettingsPanel, BorderLayout.WEST)
