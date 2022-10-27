@@ -1,9 +1,8 @@
 package CG
 
-import java.awt.{Color, Dimension, Graphics, GridBagConstraints, GridBagLayout}
+import java.awt.{ Color, GridBagConstraints, GridBagLayout }
 import javax.swing.event.ChangeEvent
-import javax.swing.{JComponent, JPanel, JSlider, JTextArea}
-import scala.swing.Graphics2D
+import javax.swing.{ JPanel, JSlider, JTextArea }
 
 object FormsMain extends App {
   val jFrame = JFrameBasics.jFrame
@@ -14,7 +13,6 @@ object FormsMain extends App {
       new JSlider(0,255,0),
       new JSlider(0,255,0)
     )
-    r.setMinorTickSpacing(1)
     var color = new Color(r.getValue,g.getValue,b.getValue)
     def recolor(e:ChangeEvent) = {
       color = new Color(r.getValue,g.getValue,b.getValue)
@@ -48,12 +46,12 @@ object FormsMain extends App {
     bsConstraint.gridwidth = 3
 
     val colorConstraint = new GridBagConstraints()
-    rsConstraint.weightx = 0
-    rsConstraint.weighty = 0
-    rsConstraint.gridx = 3
-    rsConstraint.gridy = 3
-    rsConstraint.gridheight = 3
-    rsConstraint.gridwidth = 1
+    colorConstraint.weightx = 0
+    colorConstraint.weighty = 0
+    colorConstraint.gridx = 3
+    colorConstraint.gridy = 0
+    colorConstraint.gridheight = 3
+    colorConstraint.gridwidth = 1
 
     val colorField = new JTextArea(4,4)
     colorField.setBackground(color)
@@ -63,6 +61,14 @@ object FormsMain extends App {
     add(b,bsConstraint)
     add(colorField,colorConstraint)
     revalidate()
+  
+    println(s"bsConstraint.anchor = ${ bsConstraint.anchor }")
+    println(s"gsConstraint.anchor = ${ gsConstraint.anchor }")
+    println(s"rsConstraint.anchor = ${ rsConstraint.anchor }")
+    println(s"bsConstraint.fill = ${ bsConstraint.fill }")
+    println(s"bsConstraint.insets = ${ bsConstraint.insets }")
+    println(s"bsConstraint.ipadx = ${ bsConstraint.ipadx }")
+    println(s"bsConstraint.ipady = ${ bsConstraint.ipady }")
   }
   jFrame.add(new ColorChoosePanel)
   jFrame.revalidate()
