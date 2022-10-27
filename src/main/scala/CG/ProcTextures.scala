@@ -10,7 +10,7 @@ object ProcTextures extends App{
   var gridColor = new Color(0,0,0)
   var cellColor = new Color(255,255,255)
   var outlineWidth = 3
-  var cellSize = 10
+  var cellSize = 80
   var brickHeight = 40
   
   case class RandomAdditions(f:(Int,Int)=>Boolean){
@@ -73,22 +73,22 @@ object ProcTextures extends App{
   val jPanel = new JPanel()
   jPanel.setBounds(700,5,600,700)
   jPanel.add(new JLabel("Texture mode: \n"))
-  val brickButton = new JButton("bricks")
+  val brickButton = new JButton("Bricks")
   brickButton.addActionListener( _ => {
     mode = BRICKS
     drawTextures()
   })
-  val plainColorButton = new JButton("fill with color")
+  val plainColorButton = new JButton("Fill with color")
   plainColorButton.addActionListener( _ => {
     mode = PLAIN_COLOR
     drawTextures()
   })
-  val gridButton = new JButton("grid")
+  val gridButton = new JButton("Grid")
   gridButton.addActionListener( _ => {
     mode = GRID
     drawTextures()
   })
-  val multicolorGridButton = new JButton("all the colors")
+  val multicolorGridButton = new JButton("Multicolor grid")
   multicolorGridButton.addActionListener( _ => {
     mode = MULTICOLOR_GRID
     drawTextures()
