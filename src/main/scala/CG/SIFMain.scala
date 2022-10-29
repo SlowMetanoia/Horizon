@@ -1,14 +1,12 @@
 package CG
 
-import java.awt.event.{ MouseAdapter, MouseEvent }
-import java.awt.geom.{ AffineTransform, Line2D, Point2D }
-import java.awt.{ BorderLayout, Color, Graphics, Shape }
-import javax.swing.{ JButton, JComponent, JPanel, JToggleButton }
-import scala.swing.Graphics2D
+import java.awt.event.{MouseAdapter, MouseEvent}
+import java.awt.geom.{AffineTransform, Line2D, Point2D}
+import java.awt.{BorderLayout, Color, Graphics, Shape}
+import javax.swing.{JButton, JComponent, JPanel, JToggleButton}
+import scala.swing.{Dimension, Graphics2D}
 
 object SIFMain extends App{
-  //ряды
-  def series[T](prev:T)(next:T=>T):LazyList[T] = prev#::series(next(prev))(next)
   //Всяческий сетап и рисование формочек
   val jFrame = JFrameBasics.jFrame
   val setupTransformation = JFrameBasics.startTransposition
@@ -44,6 +42,9 @@ object SIFMain extends App{
       transformationList(4),
       Seq(new Line2D.Double(0, 0, 1, 0))
       )
+  all.setMinimumSize(new Dimension(400,400))
+  all.setMaximumSize(new Dimension(700,700))
+  all.setPreferredSize(new Dimension(600,600))
   
   jFrame.add(all, BorderLayout.CENTER)
 
